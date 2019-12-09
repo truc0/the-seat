@@ -1,5 +1,8 @@
 export const state = () => ({
-  seats: []
+  seats: [],
+  info: {
+    title: 'SeatTable'
+  }
 })
 
 export const mutations = {
@@ -18,5 +21,16 @@ export const mutations = {
   remove(state, { seat }) {
     let id = isNaN(seat) ? state.seats.indexOf(seat) : seat
     state.seats.pop( id )
+  }
+}
+
+export const actions = {
+  async get({ commit }) {
+    const data = await this.$axios.$get('/demo.json')
+    commit('set', { seats: data })
+  },
+
+  async setSeats({ commit }, { val }) {
+    commit('set', { seats: val })
   }
 }

@@ -1,3 +1,5 @@
+let g
+
 export const state = () => ({
   seats: [],
   info: {

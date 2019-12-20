@@ -78,13 +78,13 @@ g.random = (arr, minPerGroup, maxPerGroup) => {
   let _arr = arr // create alias
   let result = []
   let tmp = []
-  for (let i=0; i<partition.length; ++i) {
+  partition.forEach(element => {
     tmp = []
-    i.forEach(e => {
+    for (let i=0; i<element; ++i) {
       tmp.push( _arr.pop( g.randomInt(0, _arr.length-1) ) )
-    })
+    }
     result.push(tmp)
-  }
+  })
 
   return result
 }

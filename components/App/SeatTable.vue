@@ -1,19 +1,19 @@
 <template>
   <v-container class="seats">
-    <draggable 
+    <draggable
       v-model="seats"
       v-bind="dragOptions"
       @start="drag = true"
       @end="drag = false"
     >
-      <transition-group 
+      <transition-group
         class="row"
         type="transition"
         name="!drag ? 'flip-list' : null"
       >
         <v-col
-          cols="4" 
-          v-for="i in seats" 
+          cols="4"
+          v-for="i in seats"
           :key="i.id"
         >
           <v-btn outlined color="primary">
@@ -22,16 +22,6 @@
         </v-col>
       </transition-group>
     </draggable>
-    <!-- <draggable
-      class="list-group"
-      tag="ul"
-      v-model="list"
-      
-      
-    >
-      <transition-group type="transition" :name="!drag ? 'flip-list' : null">
-      </transition-group>
-    </draggable> -->
   </v-container>
 </template>
 
@@ -78,7 +68,6 @@ export default {
   },
 
   mounted() {
-
   }
 }
 </script>

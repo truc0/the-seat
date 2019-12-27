@@ -1,8 +1,9 @@
+import Vue from 'vue'
+
 let Group = {}
-let g = Group // alias for Group
 
 /**
- * random a int 
+ * random a int
  * @param {int} minimum minimum of the random int
  * @param {int} maximum maximum of the random int
  * @returns {int} a random int between minimum(included) and maximum(included)
@@ -31,14 +32,14 @@ Group.randomInt = (minimum, maximum) => {
  * @param {int} groupsCnt the amount of groups
  * @param {int} minPerGroup minimum quanlity of items in a group
  * @param {int} maxPerGroup maximum quanlity of items in a group
- * @returns {array} an array contains number of people in each group like [1, 9] means 1 item in group 1 and 9 items in group 2 
+ * @returns {array} an array contains number of people in each group like [1, 9] means 1 item in group 1 and 9 items in group 2
  */
-g.partition = (itemsCnt, groupsCnt, minPerGroup, maxPerGroup) => {
+Group.partition = (itemsCnt, groupsCnt, minPerGroup, maxPerGroup) => {
   // quanlity check
   if (minPerGroup > maxPerGroup) {
     throw RangeError("minPerGroup should be smaller than maxPerGroup")
   }
-  if (groupsCnt*minPerGroup > itemsCnt 
+  if (groupsCnt*minPerGroup > itemsCnt
     || groupsCnt*maxPerGroup < itemsCnt) {
       throw RangeError("cannot divide to groups as itemsCnt is not in range")
     }
@@ -51,7 +52,7 @@ g.partition = (itemsCnt, groupsCnt, minPerGroup, maxPerGroup) => {
 
   let items = itemsCnt - groupsCnt*minPerGroup
   for (let i=0; i<items; ++i) {
-    result[ g.randomInt(0, groupsCnt-1) ]++
+    result[ Group.randomInt(0, groupsCnt-1) ]++
   }
 
   return result
@@ -64,14 +65,14 @@ g.partition = (itemsCnt, groupsCnt, minPerGroup, maxPerGroup) => {
  * @param {int} maxPerGroup maximum quanlity of a group
  * @returns an array contains items which are randomly grouped
  */
-g.random = (arr, minPerGroup, maxPerGroup) => {
-  let partition = g.partition(
-      arr.length, 
-      g.randomInt(
-        Math.ceil(arr.length/maxPerGroup), 
+Group.random = (arr, minPerGroup, maxPerGroup) => {
+  let partition = Group.partition(
+      arr.length,
+      Group.randomInt(
+        Math.ceil(arr.length/maxPerGroup),
         Math.floor(arr.length/minPerGroup)
       ),
-      minPerGroup, 
+      minPerGroup,
       maxPerGroup
     )
 
@@ -81,7 +82,7 @@ g.random = (arr, minPerGroup, maxPerGroup) => {
   partition.forEach(element => {
     tmp = []
     for (let i=0; i<element; ++i) {
-      tmp.push( _arr.pop( g.randomInt(0, _arr.length-1) ) )
+      tmp.push( _arr.pop( Group.randomInt(0, _arr.length-1) ) )
     }
     result.push(tmp)
   })
@@ -89,4 +90,5 @@ g.random = (arr, minPerGroup, maxPerGroup) => {
   return result
 }
 
-export default Group
+
+Vue.prototype.$group = Group

@@ -13,12 +13,10 @@
       >
         <v-col
           cols="4"
-          v-for="i in seats"
-          :key="i.id"
+          v-for="(s, index) in seats"
+          :key="index + newUid()"
         >
-          <v-btn outlined color="primary">
-            {{ i.name }}
-          </v-btn>
+          {{ JSON.stringify(s) }}
         </v-col>
       </transition-group>
     </draggable>
@@ -46,15 +44,18 @@ export default {
   },
 
   methods: {
+    newUid() {
+      return this.$uuid.v4()
+    }
   },
 
   computed: {
     seats: {
       get() {
-        return this.$store.state.current.seats
+        return this.$store.state.current.arranged
       },
-      set(val) {
-        return this.$store.dispatch('current/setSeats', { val: val })
+      set(seats) {
+        return this.$store.commit('current/setArranged', { arranged: seats })
       }
     },
     dragOptions() {

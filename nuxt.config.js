@@ -30,7 +30,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~/plugins/group.js'
+    '~/plugins/arrange.js',
+    '~/plugins/uuid.js'
   ],
   /*
   ** Nuxt.js dev-modules

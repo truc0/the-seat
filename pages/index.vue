@@ -29,11 +29,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      set: 'set',
-      add: 'add'
-    }),
-
     ...mapActions({
       get: 'get'
     })
@@ -41,8 +36,7 @@ export default {
 
   computed: {
     ...mapState({
-      info: 'info',
-      seats: 'seats'
+      info: 'info'
     })
   }
 }

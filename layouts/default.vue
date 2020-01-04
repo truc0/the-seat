@@ -35,6 +35,33 @@
         <span class="grey--text font-weight-medium">Seat</span>
       </v-toolbar-title>
       <v-spacer />
+      <v-menu offset-y>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            depressed
+            text
+            v-on="on"
+          >
+            <v-icon
+              small
+              left
+              class="grey--text"
+            >
+              mdi-cached
+            </v-icon>
+            <span class="grey--text">ReArrange</span>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="(item, index) in rearrangeOptions"
+            :key="index"
+            @click="item.action"
+          >
+            <v-list-item-title>{{ item.text }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
     <v-content>
       <v-container>
@@ -72,7 +99,15 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'TheSeat'
+      title: 'TheSeat',
+      rearrangeOptions: [
+        {
+          text: 'random',
+          action: () => this.$store.dispatch(
+              'current/rearrange', { method: 'random' }
+            )
+        }
+      ]
     }
   }
 }

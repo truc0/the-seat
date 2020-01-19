@@ -31,6 +31,7 @@ export default {
   */
   plugins: [
     '~/plugins/arrange.js',
+    '~/plugins/gender.js',
     '~/plugins/uuid.js'
   ],
   /*

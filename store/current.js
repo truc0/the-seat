@@ -66,9 +66,10 @@ export const mutations = {
 }
 
 export const actions = {
-  async get({ commit }) {
+  async get({ commit, dispatch }) {
     const data = await this.$axios.$get('/demo.json')
     commit('setItems', { items: data })
+    dispatch('rearrange', { method: 'random' })
   },
 
   async rearrange({ commit, state }, { method }) {

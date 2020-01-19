@@ -1,10 +1,9 @@
 <template>
-  <v-container>
-    <v-row>
-      <span class="subtitle-2 mb-3 grey--text">{{ info.title }}</span>
-    </v-row>
-    <seat-table></seat-table>
-  </v-container>
+  <div>
+    <seat-table
+      v-model="seats"
+    />
+  </div>
 </template>
 
 <script>
@@ -20,12 +19,23 @@ export default {
 
   data() {
     return {
-
+      updateInterval: null,
+      seats: null
     }
   },
 
-  mounted() {
+  created() {
     this.get()
+  },
+
+  mounted() {
+    this.updateInterval = setInterval(() => {
+      this.seats = [...this.arranged]
+
+      if (this.seats) {
+        clearInterval(this.updateInterval)
+      }
+    }, 1000)
   },
 
   methods: {
@@ -36,7 +46,8 @@ export default {
 
   computed: {
     ...mapState({
-      info: 'info'
+      info: 'info',
+      arranged: 'arranged'
     })
   }
 }

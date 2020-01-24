@@ -78,7 +78,7 @@ Arrange.random = (arr, minPerGroup, maxPerGroup) => {
       maxPerGroup
     )
 
-  let _arr = arr // create alias
+  let _arr = [...arr] // create alias
   let result = []
   let tmp = []
   partition.forEach(element => {

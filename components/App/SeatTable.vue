@@ -142,11 +142,11 @@ export default {
 
     rearrange(method) {
       let arranged = this.$group[method](
-        value,
+        [...this.value].flat(),
         this.minPerGroup, 
         this.maxPerGroup
         )
-      console.log(arranged)
+      this.emitter(arranged)
     }
   },
 

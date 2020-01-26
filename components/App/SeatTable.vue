@@ -3,7 +3,7 @@
     <v-row align="center" justify="center" class="ma-3">
       <span class="subtitle-1 grey--text">F6E</span>
       <v-spacer></v-spacer>
-      <v-menu offset-y>
+      <v-menu offset-y v-for="(opt, index) in actions" :key="newUid()+index">
         <template v-slot:activator="{ on }">
           <v-btn
             depressed
@@ -15,14 +15,14 @@
               left
               class="grey--text"
             >
-              mdi-cached
+              {{ opt.icon }}
             </v-icon>
-            <span class="grey--text">ReArrange</span>
+            <span class="grey--text">{{ opt.text }}</span>
           </v-btn>
         </template>
         <v-list>
           <v-list-item
-            v-for="(item, index) in rearrangeOptions"
+            v-for="(item, index) in opt.options"
             :key="index"
             @click="item.action"
           >
@@ -72,6 +72,16 @@
               </v-col>
             </draggable>
           </v-col>
+          <v-col
+            cols="4"
+            class="add row align-center justify-center"
+            @click="addNewBlock"  
+            :key="newUid()"
+          >
+            <v-icon>
+              mdi-plus
+            </v-icon>
+          </v-col>
         </transition-group>
       </draggable>
     </v-container>
@@ -106,12 +116,18 @@ export default {
         female: "pink",
         unknown: "indigo"
       },
-      rearrangeOptions: [
+      actions: [
         {
-          text: 'random',
-          action: () => this.rearrange('random')
+          icon: 'mdi-cached',
+          text: 'ReArrange',
+          options: [
+            {
+              text: 'random',
+              action: () => this.rearrange('random')
+            }
+          ]
         }
-      ]
+      ],
     }
   },
 
@@ -147,6 +163,11 @@ export default {
         this.maxPerGroup
         )
       this.emitter(arranged)
+    },
+
+    addNewBlock() {
+      let _v = [...this.value, []]
+      this.emitter(_v)
     }
   },
 
@@ -194,6 +215,10 @@ export default {
     border: 1px solid #ccc;
     border-radius: 3px;
   }
+}
+
+.add {
+  cursor: pointer;
 }
 
 </style>

@@ -3,6 +3,28 @@
     <v-row align="center" justify="center" class="ma-3">
       <span class="subtitle-1 grey--text">F6E</span>
       <v-spacer></v-spacer>
+      <input 
+        type="file" 
+        ref="upload" 
+        class="upload"
+        @change="upload"
+      />
+      <label for="upload">
+        <v-btn
+          depressed
+          text
+          @click="dispatchUpload"
+        >
+          <v-icon
+            small
+            left
+            class="grey--text"
+          >
+            mdi-upload
+          </v-icon>
+          <span class="grey--text">Upload</span>
+        </v-btn>
+      </label>
       <v-menu offset-y v-for="(opt, index) in actions" :key="newUid()+index">
         <template v-slot:activator="{ on }">
           <v-btn
@@ -132,10 +154,17 @@ export default {
   },
 
   methods: {
+    /**
+     * @return a uuid version 4
+     */
     newUid() {
       return this.$uuid.v4()
     },
 
+    /**
+     * @param {string} gender gender represent in string
+     * @return coresponding color of gender
+     */
     getColor(gender) {
       let res = this.$gender.gender(gender)
 
@@ -152,10 +181,20 @@ export default {
       }
     },
 
+    /**
+     * emit value for v-model
+     * @param {*} value the value to be emitted
+     * @return undefined
+     */
     emitter(value) {
       this.$emit('input', value)
     },
 
+    /**
+     * rearrange data with given method and emit rearranged array
+     * @param {string} method method used to rearrange people
+     * @return undefined
+     */
     rearrange(method) {
       let arranged = this.$group[method](
         [...this.value].flat(),
@@ -165,10 +204,63 @@ export default {
       this.emitter(arranged)
     },
 
+    /**
+     * add new block to existed table
+     * @return undefined
+     */
     addNewBlock() {
       let _v = [...this.value, []]
       this.emitter(_v)
-    }
+    },
+
+    /**
+     * dispatch upload event
+     * @return undefined
+     */
+    dispatchUpload() {
+      let click = new MouseEvent('click', {
+          view: window,
+          bubbles: true,
+          cancelable: true
+      })
+      this.$refs.upload.dispatchEvent(click)
+    },
+
+    /**
+     * Copy from https://github.com/SheetJS/sheetjs/blob/master/demos/vue/SheetJS-vue.js
+     * Under **Apache-2.0 License**
+     */
+    upload(evt) {
+			let file;
+			let files = evt.target.files;
+
+			if (!files || files.length == 0) return;
+
+			file = files[0];
+
+			let reader = new FileReader();
+			reader.onload = e => {
+				// pre-process data
+				let binary = "";
+				let bytes = new Uint8Array(e.target.result);
+				let length = bytes.byteLength;
+				for (let i = 0; i < length; i++) {
+					binary += String.fromCharCode(bytes[i]);
+				}
+
+				/* read workbook */
+				let wb = this.$xlsx.read(binary, {type: 'binary'});
+
+				/* grab first sheet */
+				let wsname = wb.SheetNames[0];
+				let ws = wb.Sheets[wsname];
+
+        let data = this.$xlsx.utils.sheet_to_json(ws)
+        console.log(data)
+			};
+
+			reader.readAsArrayBuffer(file);
+		}
   },
 
   computed: {
@@ -198,6 +290,10 @@ export default {
 .seats {
   border: 3px solid #ccc;
   border-radius: .3rem;
+}
+
+.upload {
+  display: none;
 }
 
 .group {

@@ -93,6 +93,34 @@ Arrange.random = (arr, minPerGroup, maxPerGroup) => {
 }
 
 
+/**
+ * Partition array sequential
+ * @param {array} arr array to be partition
+ * @param {integer} minPerGroup minium amount of people in a group, or use as number of people in a group
+ * @param {integer} maxPerGroup optional, use minPerGroup as the number of a group if not specify 
+ * @return {array} the processed array
+ */
+Arrange.sequential = (arr, minPerGroup, maxPerGroup=null) => {
+  
+  let gp = minPerGroup
+  let res = []
+
+  if (maxPerGroup !== null) {
+    gp = Arrange.randomInt(minPerGroup, maxPerGroup)
+  }
+
+  for (let i=0; i<arr.length; ++i) {
+    let tmp = []
+    for (let j=0; j<gp && arr[i+j]; ++j) {
+      tmp.push(arr[i+j])
+    }
+    res.push(tmp)
+  }
+
+  return res
+}
+
+
 Vue.prototype.$group = Arrange
 
 export { Arrange }

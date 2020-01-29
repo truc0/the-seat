@@ -25,7 +25,7 @@
           <span class="grey--text">Upload</span>
         </v-btn>
       </label>
-      <v-menu offset-y v-for="(opt, index) in actions" :key="newUid()+index">
+      <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn
             depressed
@@ -37,14 +37,14 @@
               left
               class="grey--text"
             >
-              {{ opt.icon }}
+              mdi-cached
             </v-icon>
-            <span class="grey--text">{{ opt.text }}</span>
+            <span class="grey--text">ReArrange</span>
           </v-btn>
         </template>
         <v-list>
           <v-list-item
-            v-for="(item, index) in opt.options"
+            v-for="(item, index) in rearrangeOptions"
             :key="index"
             @click="item.action"
           >
@@ -71,7 +71,7 @@
             class="group"
             cols="4"
             v-for="(s, index) in value"
-            :key="index + newUid()"
+            :key="'group_'+index"
           >
             <draggable
               class="row justify-center align-center"
@@ -146,10 +146,24 @@ export default {
             {
               text: 'random',
               action: () => this.rearrange('random')
+            },
+            {
+              text: 'sequential',
+              action: () => this.rearrange('sequential')
             }
           ]
         }
       ],
+      rearrangeOptions: [
+        {
+          text: 'random',
+          action: () => this.rearrange('random')
+        },
+        {
+          text: 'sequential',
+          action: () => this.rearrange('sequential')
+        } 
+      ]
     }
   },
 

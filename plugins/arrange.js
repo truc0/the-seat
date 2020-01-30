@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import { uuid } from '~/plugins/uuid'
+import { Gender } from '~/plugins/gender'
 
 let Arrange = {}
 
@@ -109,7 +111,7 @@ Arrange.sequential = (arr, minPerGroup, maxPerGroup=null) => {
     gp = Arrange.randomInt(minPerGroup, maxPerGroup)
   }
 
-  for (let i=0; i<arr.length; ++i) {
+  for (let i=0; i<arr.length; i+=gp) {
     let tmp = []
     for (let j=0; j<gp && arr[i+j]; ++j) {
       tmp.push(arr[i+j])
@@ -118,6 +120,34 @@ Arrange.sequential = (arr, minPerGroup, maxPerGroup=null) => {
   }
 
   return res
+}
+
+/**
+ * standardize an array, add uid to item etc.
+ * @param {array} arr arr to be standardized
+ * @return {array} the standardized array
+ */
+Arrange.standardize = arr => {
+  arr.forEach(element => {
+    // turn all property to lowercase
+    for (let k in element) {
+      if (k === k.toLocaleLowerCase()) {
+        continue
+      }
+      element[k.toLocaleLowerCase()] = element[k]
+      delete element[k]
+    }
+
+    if (!element.uid) {
+      element.uid = uuid.v4()
+    }
+    if (!element.gender) {
+      element.gender = element.Gender || 'unknown'
+    }
+  })
+
+  // console.log(arr)
+  return arr
 }
 
 

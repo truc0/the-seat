@@ -163,7 +163,8 @@ export default {
           text: 'sequential',
           action: () => this.rearrange('sequential')
         } 
-      ]
+      ],
+      testRef: null
     }
   },
 
@@ -241,39 +242,25 @@ export default {
     },
 
     /**
-     * Copy from https://github.com/SheetJS/sheetjs/blob/master/demos/vue/SheetJS-vue.js
+     * Partly copy from https://github.com/SheetJS/sheetjs/blob/master/demos/vue/SheetJS-vue.js
      * Under **Apache-2.0 License**
      */
     upload(evt) {
-			let file;
-			let files = evt.target.files;
+      let file
+      let files = evt.target.files
 
-			if (!files || files.length == 0) return;
+      if (!files || files.length == 0) return;
 
-			file = files[0];
+      file = files[0];
 
-			let reader = new FileReader();
-			reader.onload = e => {
-				// pre-process data
-				let binary = "";
-				let bytes = new Uint8Array(e.target.result);
-				let length = bytes.byteLength;
-				for (let i = 0; i < length; i++) {
-					binary += String.fromCharCode(bytes[i]);
-				}
+      let reader = new FileReader()
 
-				/* read workbook */
-				let wb = this.$xlsx.read(binary, {type: 'binary'});
-
-				/* grab first sheet */
-				let wsname = wb.SheetNames[0];
-				let ws = wb.Sheets[wsname];
-
-        let data = this.$xlsx.utils.sheet_to_json(ws)
-        console.log(data)
-			};
-
-			reader.readAsArrayBuffer(file);
+      new Promise((resolve, reject) => {
+        reader.onload = this.$upload.xlsx(resolve, reject)
+        reader.readAsArrayBuffer(file);
+      }).then(data => this.$group.standardize(data))
+        .then(data => this.$group.sequential(data, this.minPerGroup, this.maxPerGroup))
+        .then(data => this.emitter(data))
 		}
   },
 

@@ -24,10 +24,10 @@ Gender.Unknown = 0
  * @returns {number} gender code
  */
 Gender.gender = gender => {
-  if (Gender.identify.male.indexOf(gender.toLowerCase()) !== -1) {
+  if (Gender.identify.male.indexOf(gender.toLocaleLowerCase()) !== -1) {
     // man
     return Gender.Male
-  } else if (Gender.identify.female.indexOf(gender.toLowerCase()) !== -1) {
+  } else if (Gender.identify.female.indexOf(gender.toLocaleLowerCase()) !== -1) {
     // female
     return Gender.Female
   } else {

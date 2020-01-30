@@ -34,7 +34,7 @@ export default {
     '~/plugins/gender.js',
     '~/plugins/uuid.js',
     { src: '~/plugins/storage.js', mode: 'client' },
-    { src: '~/plugins/xlsx.js', mode: 'client' }
+    { src: '~/plugins/upload.js', mode: 'client' }
   ],
   /*
   ** Nuxt.js dev-modules

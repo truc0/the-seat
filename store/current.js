@@ -1,5 +1,7 @@
 import { Arrange } from '~/plugins/arrange'
-import { uuid } from '~/plugins/uuid'
+import Tools from '~/plugins/helpers'
+
+const { uuid } = Tools
 
 export const state = () => ({
   arranged: null,
@@ -76,7 +78,7 @@ export const actions = {
     let items = [...state.items] // create a new object
     let arranged = Arrange[method](
       items,
-      state.minPerGroup, 
+      state.minPerGroup,
       state.maxPerGroup
       )
 

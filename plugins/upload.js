@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import XLSX from 'xlsx'
-import { Arrange } from '~/plugins/arrange'
+import Arrange from '~/plugins/arrange'
+import Tools from '~/plugins/helpers'
 
 let Upload = {}
 

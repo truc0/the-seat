@@ -3,9 +3,9 @@
     <v-row align="center" justify="center" class="ma-3">
       <span class="subtitle-1 grey--text">F6E</span>
       <v-spacer></v-spacer>
-      <input 
-        type="file" 
-        ref="upload" 
+      <input
+        type="file"
+        ref="upload"
         class="upload"
         @change="upload"
       />
@@ -84,8 +84,8 @@
                 v-for="item in s"
                 :key="item.uid ? item.uid : newUid()"
               >
-                <v-btn 
-                  outlined 
+                <v-btn
+                  outlined
                   :color="getColor(item.gender)"
                   class="text-wrap"
                 >
@@ -97,7 +97,7 @@
           <v-col
             cols="4"
             class="add row align-center justify-center"
-            @click="addNewBlock"  
+            @click="addNewBlock"
             :key="newUid()"
           >
             <v-icon>
@@ -162,7 +162,7 @@ export default {
         {
           text: 'sequential',
           action: () => this.rearrange('sequential')
-        } 
+        }
       ],
       testRef: null
     }
@@ -173,7 +173,8 @@ export default {
      * @return a uuid version 4
      */
     newUid() {
-      return this.$uuid.v4()
+      console.log(this.$tools)
+      return this.$tools.uuid.v4()
     },
 
     /**
@@ -213,7 +214,7 @@ export default {
     rearrange(method) {
       let arranged = this.$group[method](
         [...this.value].flat(),
-        this.minPerGroup, 
+        this.minPerGroup,
         this.maxPerGroup
         )
       this.emitter(arranged)

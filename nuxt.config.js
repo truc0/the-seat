@@ -32,7 +32,7 @@ export default {
   plugins: [
     '~/plugins/arrange.js',
     '~/plugins/gender.js',
-    '~/plugins/uuid.js',
+    '~/plugins/helpers.js',
     { src: '~/plugins/storage.js', mode: 'client' },
     { src: '~/plugins/upload.js', mode: 'client' }
   ],

@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import Vue from 'vue'
+
 import { uuid } from '~/plugins/uuid'
 import { Gender } from '~/plugins/gender'
 
@@ -13,12 +15,12 @@ let Arrange = {}
 Arrange.randomInt = (minimum, maximum) => {
   // type check
   if (!Number.isInteger(minimum) || !Number.isInteger(maximum)) {
-    throw TypeError("minimum and maximum should be integer")
+    throw TypeError("Arrange.randomInt: minimum and maximum should be integer")
   }
 
   // value check
   if (minimum > maximum) {
-    throw RangeError("minimum should be smaller than maximum")
+    throw RangeError("Arrange.randomInt: minimum should be smaller than maximum")
   }
 
   let gap = maximum- minimum + 1
@@ -52,11 +54,22 @@ Arrange.partition = (itemsCnt, groupsCnt, minPerGroup, maxPerGroup) => {
     result.push(minPerGroup)
   }
 
-  let items = itemsCnt - groupsCnt*minPerGroup
-  for (let i=0; i<items; ++i) {
-    if (result[ Arrange.randomInt(0, groupsCnt-1) ] < maxPerGroup) {
-      result[ Arrange.randomInt(0, groupsCnt-1) ]++
+  let restOfItems = itemsCnt - groupsCnt*minPerGroup
+  for (let i=0; i<restOfItems; ++i) {
+    let randomIndex = Arrange.randomInt(0, groupsCnt-1)
+
+    // find a group which item is able to be added in
+    let _cnt = 0 // set a count for secure reason
+    while (result[randomIndex] >= maxPerGroup) {
+      randomIndex = (randomIndex+1) % groupsCnt
+      _cnt++
+
+      if (_cnt > groupsCnt) {
+        throw Error("Arrange.partition: unexpected error, code: 01")
+      }
     }
+
+    result[randomIndex]++
   }
 
   return result
@@ -99,11 +112,11 @@ Arrange.random = (arr, minPerGroup, maxPerGroup) => {
  * Partition array sequential
  * @param {array} arr array to be partition
  * @param {integer} minPerGroup minium amount of people in a group, or use as number of people in a group
- * @param {integer} maxPerGroup optional, use minPerGroup as the number of a group if not specify 
+ * @param {integer} maxPerGroup optional, use minPerGroup as the number of a group if not specify
  * @return {array} the processed array
  */
 Arrange.sequential = (arr, minPerGroup, maxPerGroup=null) => {
-  
+
   let gp = minPerGroup
   let res = []
 

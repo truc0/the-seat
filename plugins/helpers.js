@@ -35,8 +35,7 @@ Tools.standardize = sourceArray => {
     }
   })
 
-  // console.log(arr)
-  return arr
+  return copiedArray
 }
 
 

@@ -173,7 +173,6 @@ export default {
      * @return a uuid version 4
      */
     newUid() {
-      console.log(this.$tools)
       return this.$tools.uuid.v4()
     },
 

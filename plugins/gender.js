@@ -68,4 +68,4 @@ Gender.isFemale = gender => {
 
 Vue.prototype.$gender = Gender
 
-export { Gender }
+export default Gender

@@ -7,12 +7,29 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { createNamespacedHelpers } from 'vuex'
-import SeatTable from "~/components/App/SeatTable"
+import Arrange from '~/plugins/arrange.js'
+import Tools from '~/plugins/helpers'
 
 const { mapState, mapMutations, mapActions } = createNamespacedHelpers('current')
 
+import SeatTable from "~/components/App/SeatTable"
+
+
 export default {
+  async asyncData(ctx) {
+    return ctx.$axios.$get('/demo.json')
+            .then(data => Tools.standardize(data))
+            .then(data => ({
+              info: {
+                title: 'SeatTable'
+              },
+              items: data,
+              arranged: Arrange['random'](data, 2, 3)
+            }))
+  },
+
   components: {
     SeatTable
   },
@@ -25,7 +42,6 @@ export default {
   },
 
   created() {
-    this.get()
   },
 
   mounted() {
@@ -39,16 +55,9 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      get: 'get'
-    })
   },
 
   computed: {
-    ...mapState({
-      info: 'info',
-      arranged: 'arranged'
-    })
   }
 }
 </script>

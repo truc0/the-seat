@@ -151,4 +151,4 @@ Arrange.sequential = (sourceArray, minPerGroup, maxPerGroup=null) => {
 
 Vue.prototype.$group = Arrange
 
-export { Arrange }
+export default Arrange

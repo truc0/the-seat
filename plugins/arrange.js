@@ -1,8 +1,10 @@
 import _ from 'lodash'
 import Vue from 'vue'
 
-import { uuid } from '~/plugins/uuid'
-import { Gender } from '~/plugins/gender'
+import Tools from '~/plugins/helpers.js'
+import Gender from '~/plugins/gender'
+
+const { uuid } = Tools
 
 let Arrange = {}
 

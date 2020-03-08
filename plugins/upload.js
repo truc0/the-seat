@@ -31,7 +31,7 @@ Upload.xlsx = (resolve, reject) => {
 
     try {
       let data = XLSX.utils.sheet_to_json(ws)
-      data = Arrange.standardize(data)
+      data = Tools.standardize(data)
       resolve(data)
     } catch (error) {
       reject(error)

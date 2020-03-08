@@ -111,10 +111,7 @@
 </template>
 
 <script>
-import { createNamespacedHelpers } from 'vuex'
 import draggable from 'vuedraggable'
-
-const { mapState, mapMutations, mapActions } = createNamespacedHelpers('current')
 
 export default {
   props: {
@@ -138,6 +135,8 @@ export default {
         female: "pink",
         unknown: "indigo"
       },
+      maxPerGroup: 3,
+      minPerGroup:2,
       actions: [
         {
           icon: 'mdi-cached',
@@ -273,11 +272,6 @@ export default {
         ghostClass: "ghost"
       }
     },
-
-    ...mapState([
-      'minPerGroup',
-      'maxPerGroup'
-    ])
   },
 
   mounted() {

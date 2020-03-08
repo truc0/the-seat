@@ -77,31 +77,33 @@ Arrange.partition = (itemsCnt, groupsCnt, minPerGroup, maxPerGroup) => {
 
 /**
  * group items randomly
- * @param {array} arr a flattened (one dimension) array
+ * @param {array} sourceArray a flattened (one dimension) array
  * @param {int} minPerGroup minimum quanlity of a group
  * @param {int} maxPerGroup maximum quanlity of a group
  * @returns an array contains items which are randomly grouped
  */
-Arrange.random = (arr, minPerGroup, maxPerGroup) => {
+Arrange.random = (sourceArray, minPerGroup, maxPerGroup) => {
   let partition = Arrange.partition(
-      arr.length,
+      sourceArray.length,
       Arrange.randomInt(
-        Math.ceil(arr.length/maxPerGroup),
-        Math.floor(arr.length/minPerGroup)
+        Math.ceil(sourceArray.length/maxPerGroup),
+        Math.floor(sourceArray.length/minPerGroup)
       ),
       minPerGroup,
       maxPerGroup
     )
 
-  let _arr = [...arr] // create alias
+  let copiedArray = _.cloneDeep(sourceArray)
   let result = []
-  let tmp = []
-  partition.forEach(element => {
-    tmp = []
-    for (let i=0; i<element; ++i) {
-      tmp.push( _arr.pop( Arrange.randomInt(0, _arr.length-1) ) )
+  let currentIndex = 0
+  partition.forEach(numOfItems => {
+    result.push([])
+    currentIndex = result.length - 1 // the last one
+    for (let i=0; i<numOfItems; ++i) {
+      result[currentIndex].push(
+        copiedArray.pop(Arrange.randomInt(0, copiedArray.length-1))
+      )
     }
-    result.push(tmp)
   })
 
   return result
@@ -110,59 +112,40 @@ Arrange.random = (arr, minPerGroup, maxPerGroup) => {
 
 /**
  * Partition array sequential
- * @param {array} arr array to be partition
+ * @param {array} sourceArray array to be partition
  * @param {integer} minPerGroup minium amount of people in a group, or use as number of people in a group
  * @param {integer} maxPerGroup optional, use minPerGroup as the number of a group if not specify
  * @return {array} the processed array
  */
-Arrange.sequential = (arr, minPerGroup, maxPerGroup=null) => {
+Arrange.sequential = (sourceArray, minPerGroup, maxPerGroup=null) => {
 
-  let gp = minPerGroup
-  let res = []
+  let itemsPerGroup = null
+  let result = []
+
+  if (!Number.isInteger(minPerGroup)) {
+    throw TypeError('Array.sequential: minPerGroup must be integer')
+  }
+
+  if (!Number.isInteger(maxPerGroup) && !_.isNull(maxPerGroup)) {
+    throw TypeError('Array.sequential: maxPerGroup must be integer or null')
+  }
 
   if (maxPerGroup !== null) {
-    gp = Arrange.randomInt(minPerGroup, maxPerGroup)
+    itemsPerGroup = Arrange.randomInt(minPerGroup, maxPerGroup)
+  } else {
+    itemsPerGroup = minPerGroup
   }
 
-  for (let i=0; i<arr.length; i+=gp) {
-    let tmp = []
-    for (let j=0; j<gp && arr[i+j]; ++j) {
-      tmp.push(arr[i+j])
-    }
-    res.push(tmp)
+  let copiedArray = _.cloneDeep(sourceArray)
+  let currentIndex = 0
+
+  for (let i=0; i<copiedArray.length; i+=itemsPerGroup) {
+    currentIndex = result.length - 1 // the last one
+    result[currentIndex].push(copiedArray.slice(i, i+itemsPerGroup+1))
   }
 
-  return res
+  return result
 }
-
-/**
- * standardize an array, add uid to item etc.
- * @param {array} arr arr to be standardized
- * @return {array} the standardized array
- */
-Arrange.standardize = arr => {
-  arr.forEach(element => {
-    // turn all property to lowercase
-    for (let k in element) {
-      if (k === k.toLocaleLowerCase()) {
-        continue
-      }
-      element[k.toLocaleLowerCase()] = element[k]
-      delete element[k]
-    }
-
-    if (!element.uid) {
-      element.uid = uuid.v4()
-    }
-    if (!element.gender) {
-      element.gender = element.Gender || 'unknown'
-    }
-  })
-
-  // console.log(arr)
-  return arr
-}
-
 
 Vue.prototype.$group = Arrange
 

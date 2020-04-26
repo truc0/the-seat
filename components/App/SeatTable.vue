@@ -53,7 +53,8 @@
         </v-list>
       </v-menu>
     </v-row>
-    <v-container class="seats">
+    <!-- END navigation -->
+    <div class="seats">
       <draggable
         group="group"
         v-bind="dragOptions"
@@ -74,12 +75,13 @@
             :key="'group_'+index"
           >
             <draggable
-              class="row justify-center align-center"
+              class="row mx-0 pa-3 light-blue-lighten-5 justify-space-around align-center elevation-4"
               group="item"
               v-bind="dragOptions"
               v-model="value[index]"
             >
-              <v-col
+              <div
+                class="pa-0"
                 group="item"
                 v-for="item in s"
                 :key="item.uid ? item.uid : newUid()"
@@ -91,22 +93,23 @@
                 >
                   {{ item.name }}
                 </v-btn>
-              </v-col>
+              </div>
             </draggable>
           </v-col>
           <v-col
             cols="4"
-            class="add row align-center justify-center"
             @click="addNewBlock"
             :key="newUid()"
           >
-            <v-icon>
-              mdi-plus
-            </v-icon>
+            <v-row class="add mx-0 pa-3 justify-center align-center light-blue-lighten-5">
+              <v-icon>
+                mdi-plus
+              </v-icon>
+            </v-row>
           </v-col>
         </transition-group>
       </draggable>
-    </v-container>
+    </div>
   </div>
 </template>
 
@@ -281,35 +284,18 @@ export default {
 
 
 <style lang="scss">
-
-.seats {
-  border: 3px solid #ccc;
-  border-radius: .3rem;
-}
+@import '~vuetify/src/styles/styles.sass';
 
 .upload {
   display: none;
 }
 
 .group {
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-
-    left: 1%;
-    top: 1%;
-    height: 98%;
-    width: 98%;
-
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
+  border-radius: $border-radius-root;
 }
 
 .add {
   cursor: pointer;
+  border: 4px dashed #eee;
 }
-
 </style>

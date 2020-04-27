@@ -89,7 +89,7 @@ export default {
 <style lang="scss">
 .seat-overview, .add {
   cursor: pointer;
-  min-height: 6rem;
+  height: 100%;
 }
 
 .add {

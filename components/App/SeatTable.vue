@@ -292,6 +292,10 @@ export default {
 
 .group {
   border-radius: $border-radius-root;
+
+  &>div {
+    height: 100%;
+  }
 }
 
 .add {

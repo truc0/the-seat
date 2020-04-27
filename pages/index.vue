@@ -1,16 +1,27 @@
 <template>
   <div>
+    <v-row class="navigation-box ma-3" justify="center" align="center">
+      <span class="grey--text subtitle-1">All tables</span>
+      <v-spacer />
+    </v-row>
     <v-row
       dense
     >
-      <v-col cols="12" sm="6" md="4" lg="3">
-        <v-card router exact to="" class="seat-overview row mx-0 align-center">
+      <v-col
+        cols="12" sm="6" md="4" lg="3"
+        v-for="table in tables"
+        key="table.uid"
+      >
+        <v-card
+          router exact :to="makeRoute(table.uid)"
+          class="seat-overview row mx-0 align-center"
+        >
           <v-avatar class="ml-3">
             <v-icon class="indigo" color="white">mdi-account</v-icon>
           </v-avatar>
           <div>
-            <v-card-title class="headline">F6E</v-card-title>
-            <v-card-subtitle v-text="description"></v-card-subtitle>
+            <v-card-title class="headline">{{ table.name }}</v-card-title>
+            <v-card-subtitle v-text="description">{{ table.description }}</v-card-subtitle>
           </div>
         </v-card>
       </v-col>
@@ -18,9 +29,14 @@
         cols="12" sm="6" md="4" lg="3"
         class="row justify-center align-center"
       >
-        <v-icon class="add col mx-3 py-6">
-          mdi-plus
-        </v-icon>
+        <nuxt-link
+          class="add mx-3 py-6"
+          exact :to="makeRoute()"
+        >
+          <v-icon class="col">
+            mdi-plus
+          </v-icon>
+        </nuxt-link>
       </v-col>
     </v-row>
   </div>
@@ -32,24 +48,40 @@ import { createNamespacedHelpers } from 'vuex'
 const { mapState, mapMutations, mapActions } = createNamespacedHelpers('global')
 
 export default {
-  async asyncData(ctx) {
-
-  },
-
   data() {
     return {
-      description: "Description comes here"
+      tables: []
     }
   },
 
   mounted() {
     this.disableDrawer()
+
+    this.$storage.use('localStorage')
+    this.$storage.bootstrap()
+
+    let data = this.$storage.get().data
+    for (const key in data) {
+      this.data.push({
+        uid: key,
+        item: data[key]
+      })
+    }
   },
 
   methods: {
     ...mapMutations([
       'disableDrawer'
-    ])
+    ]),
+
+    makeRoute(uid) {
+      return {
+        name: 'seat',
+        query: {
+          uid: uid
+        }
+      }
+    }
   }
 }
 </script>
@@ -60,6 +92,7 @@ export default {
 }
 
 .add {
+  width: 100%;
   border: .5rem dashed #eee;
 }
 </style>

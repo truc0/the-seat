@@ -3,69 +3,7 @@ import Tools from '~/plugins/helpers.js'
 
 class StorageDriverNotFoundError extends Error {}
 
-let localStorage = {}
-let Storage = {
-  driver: null,
-  availableDrivers: {
-    'localStorage': localStorage
-  },
-
-  get(...args) {
-    if (!this.driver) {
-      throw StorageDriverNotFoundError(
-        "Driver is not available, perhaps it is not bootstraped"
-      )
-    }
-    return this.driver.get(...args)
-  },
-
-  update(...args) {
-    if (!this.driver) {
-      throw StorageDriverNotFoundError(
-        "Driver is not available, perhaps it is not bootstraped"
-      )
-    }
-    return this.driver.update(...args)
-  },
-
-  remove(...args) {
-    if (!this.driver) {
-      throw StorageDriverNotFoundError(
-        "Driver is not available, perhaps it is not bootstraped"
-      )
-    }
-    return this.driver.remove(...args)
-  },
-
-  create(...args) {
-    if (!this.driver) {
-      throw StorageDriverNotFoundError(
-        "Driver is not available, perhaps it is not bootstraped"
-      )
-    }
-    return this.driver.create(...args)
-  },
-
-  bootstrap(...args) {
-    if (!this.driver) {
-      throw StorageDriverNotFoundError(
-        "Driver is not available, perhaps it is not bootstraped"
-      )
-    }
-    return this.driver.bootstrap(...args)
-  },
-
-  use(driver) {
-    if (!this.availableDrivers[driver]) {
-      return false
-    } else {
-      this.driver = this.availableDrivers[driver]
-      return true
-    }
-  }
-}
-
-localStorage = {
+let local = {
   name: 'the-seat-data',
   data: null,
   template: {
@@ -76,7 +14,9 @@ localStorage = {
       name: null,
       description: null,
       color: null,
-      icon: null
+      icon: null,
+      items: [],
+      arranged: []
     }
   },
 
@@ -116,7 +56,7 @@ localStorage = {
   },
 
   bootstrap() {
-    this.data = localStorage.getItem(this.name)
+    this.data = JSON.parse(localStorage.getItem(this.name))
     if (!this.data) {
       // create new record
       this.data = this.template.full
@@ -129,6 +69,67 @@ localStorage = {
   }
 }
 
+let Storage = {
+  driver: null,
+  availableDrivers: {
+    'localStorage': local
+  },
+
+  get(...args) {
+    if (!this.driver) {
+      throw new StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.get(...args)
+  },
+
+  update(...args) {
+    if (!this.driver) {
+      throw new StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.update(...args)
+  },
+
+  remove(...args) {
+    if (!this.driver) {
+      throw new StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.remove(...args)
+  },
+
+  create(...args) {
+    if (!this.driver) {
+      throw new StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.create(...args)
+  },
+
+  bootstrap(...args) {
+    if (!this.driver) {
+      throw new StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.bootstrap(...args)
+  },
+
+  use(driver) {
+    if (!this.availableDrivers[driver]) {
+      return false
+    } else {
+      this.driver = this.availableDrivers[driver]
+      return true
+    }
+  }
+}
+
 Vue.prototype.$storage = Storage
 
-export { Storage }
+export default Storage;

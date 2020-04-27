@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Tools from '~/plugins/helpers.js'
 
@@ -11,7 +12,7 @@ let local = {
       data: {}
     },
     item: {
-      name: null,
+      name: 'No name',
       description: null,
       color: null,
       icon: null,
@@ -50,7 +51,7 @@ let local = {
 
   create() {
     let uid = Tools.uuid.v4()
-    this.data.data[uid] = this.template.item
+    this.data.data[uid] = _.clone(this.template.item)
     this.save()
     return uid
   },
@@ -59,7 +60,7 @@ let local = {
     this.data = JSON.parse(localStorage.getItem(this.name))
     if (!this.data) {
       // create new record
-      this.data = this.template.full
+      this.data = _.clone(this.template.full)
       this.save()
     }
   },

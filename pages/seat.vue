@@ -75,6 +75,7 @@ export default {
     }
 
     let data = Storage.get(payload.uid)
+    payload.data = data
     payload.items = data.items
     payload.arranged = data.arranged
 

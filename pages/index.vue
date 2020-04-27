@@ -10,7 +10,7 @@
       <v-col
         cols="12" sm="6" md="4" lg="3"
         v-for="table in tables"
-        key="table.uid"
+        :key="table.uid"
       >
         <v-card
           router exact :to="makeRoute(table.uid)"
@@ -20,8 +20,8 @@
             <v-icon class="indigo" color="white">mdi-account</v-icon>
           </v-avatar>
           <div>
-            <v-card-title class="headline">{{ table.name }}</v-card-title>
-            <v-card-subtitle v-text="description">{{ table.description }}</v-card-subtitle>
+            <v-card-title class="headline">{{ table.item.name }}</v-card-title>
+            <v-card-subtitle v-text="table.item.description"></v-card-subtitle>
           </div>
         </v-card>
       </v-col>
@@ -62,7 +62,7 @@ export default {
 
     let data = this.$storage.get().data
     for (const key in data) {
-      this.data.push({
+      this.tables.push({
         uid: key,
         item: data[key]
       })
@@ -89,6 +89,7 @@ export default {
 <style lang="scss">
 .seat-overview, .add {
   cursor: pointer;
+  min-height: 6rem;
 }
 
 .add {

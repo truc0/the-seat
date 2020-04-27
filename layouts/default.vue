@@ -33,10 +33,10 @@
         v-show="showDrawer"
         @click.stop="drawer = !drawer"
       />
-      <v-toolbar-title router exact to="/">
-        <span class="grey--text">The</span>
-        <span class="grey--text font-weight-medium">Seat</span>
-      </v-toolbar-title>
+        <v-toolbar-title>
+          <span class="grey--text">The</span>
+          <span class="grey--text font-weight-medium">Seat</span>
+        </v-toolbar-title>
       <v-spacer />
     </v-app-bar>
     <v-content>

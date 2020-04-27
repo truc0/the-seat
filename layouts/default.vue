@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
+      v-if="showDrawer"
       v-model="drawer"
       :mini-variant="miniVariant"
       :clipped="clipped"
@@ -12,7 +13,6 @@
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
-          router
           exact
         >
           <v-list-item-action>
@@ -29,8 +29,11 @@
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title>
+      <v-app-bar-nav-icon
+        v-show="showDrawer"
+        @click.stop="drawer = !drawer"
+      />
+      <v-toolbar-title router exact to="/">
         <span class="grey--text">The</span>
         <span class="grey--text font-weight-medium">Seat</span>
       </v-toolbar-title>
@@ -45,12 +48,16 @@
       :fixed="fixed"
       app
     >
-      <span>&copy; 2019</span>
+      <span>&copy; 2020</span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex'
+
+const { mapState } = createNamespacedHelpers('global')
+
 export default {
   data () {
     return {
@@ -72,16 +79,14 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: 'TheSeat',
-      rearrangeOptions: [
-        {
-          text: 'random',
-          action: () => this.$store.dispatch(
-              'current/rearrange', { method: 'random' }
-            )
-        }
-      ]
+      title: 'TheSeat'
     }
+  },
+
+  computed: {
+    ...mapState([
+      'showDrawer'
+    ])
   }
 }
 </script>

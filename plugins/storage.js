@@ -1,131 +1,134 @@
 import Vue from 'vue'
+import Tools from '~/plugins/helpers.js'
 
-let Storage = {}
+class StorageDriverNotFoundError extends Error {}
 
-Storage.template = {
-  setup: null,
-  isSettedUp: null,
-  clear: null,
-  create: null,
-  delete: null,
-  update: null,
-  query: null,
-
-  /* optional */
-  get: null,
-
-}
-
-Storage.localStorage = {
-
-  /* properties */
-  prefix: 'st_',
-  version: '1',
-  defaultName: 'default',
-  meta: {
-    version: 1,
-    count: 0,
-    avaiable: []
+let localStorage = {}
+let Storage = {
+  driver: null,
+  availableDrivers: {
+    'localStorage': localStorage
   },
 
-  /* methods */
-  setPrefix(value) {
-    this.prefix = value
+  get(...args) {
+    if (!this.driver) {
+      throw StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.get(...args)
   },
 
-  isSettedUp() {
-    return !(localStorage.getItem('meta') == undefined)
+  update(...args) {
+    if (!this.driver) {
+      throw StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.update(...args)
   },
 
-  next({ name }) {
-    this.meta.avaiable.push(name)
-
-    this.meta.count += 1
-    this.updateMeta()
-    return this.meta.count
+  remove(...args) {
+    if (!this.driver) {
+      throw StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.remove(...args)
   },
 
-  updateMeta() {
-    localStorage.setItem('meta', JSON.stringify(this.meta))
+  create(...args) {
+    if (!this.driver) {
+      throw StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.create(...args)
   },
 
-  setup() {
-    if (this.isSettedUp()) {
-      this.meta = JSON.parse(localStorage.getItem('meta'))
-      return {
-        status: true,
-        msg: 'already setted'
-      }
+  bootstrap(...args) {
+    if (!this.driver) {
+      throw StorageDriverNotFoundError(
+        "Driver is not available, perhaps it is not bootstraped"
+      )
+    }
+    return this.driver.bootstrap(...args)
+  },
+
+  use(driver) {
+    if (!this.availableDrivers[driver]) {
+      return false
     } else {
-      localStorage.setItem('meta', JSON.stringify())
-      return {
-        status: true,
-        msg: 'new database setted'
-      }
+      this.driver = this.availableDrivers[driver]
+      return true
     }
-  },
-
-  create(data, name=null) {
-    if (name === null) {
-      if (data.name) {
-        name = data.name
-      } else {
-        name = this.defaultName
-        data.name = this.defaultName
-      }
-    }
-    let id = this.next({ name })
-    data._id = id
-
-    localStorage.setItem(this.prefix+id, JSON.stringify(data))
-  },
-
-  delete(id) {
-    if (typeof id === "string" || id instanceof String) {
-      id = this.meta.avaiable.indexOf(id)
-    }
-
-    this.meta.avaiable[id] = null
-    this.updateMeta()
-
-    localStorage.removeItem(this.prefix+id)
-  },
-
-  update(id, newData) {
-    this.meta.avaiable[id] = newData.name
-    localStorage.setItem(this.prefix+id, JSON.stringify(newData))
-  },
-
-  get(id) {
-    return JSON.parse(localStorage.getItem(this.prefix+id))
-  },
-
-  get_all() {
-    let res = {
-      count: 0,
-      data: []
-    }
-
-    for (let i=0; i<=this.meta.avaiable.length; ++i) {
-      if (this.meta.avaiable[i] === null) {
-        continue
-      }
-
-      res.count += 1
-      data.push(
-        JSON.parse(localStorage.getItem(this.prefix+i))
-      )            
-    }
-
-    return res
-  },
-
-  query(id) {
-    return this.get(id)
   }
-
 }
 
-Vue.prototype.$save = Storage
+localStorage = {
+  name: 'the-seat-data',
+  data: null,
+  template: {
+    full: {
+      data: {}
+    },
+    item: {
+      name: null,
+      description: null,
+      color: null,
+      icon: null
+    }
+  },
+
+  get(uid = null) {
+    if (uid === null) {
+      return this.data
+    } else {
+      return this.data.data[uid]
+    }
+  },
+
+  update(uid = null, value) {
+    if (uid === null) {
+      // reset all
+      this.data = value
+    } else {
+      this.data.data[uid] = value
+    }
+    this.save()
+    return uid
+  },
+
+  remove(uid, value) {
+    if (this.data.data[uid]) {
+      delete this.data.data[uid]
+      return true
+    } else {
+      return false
+    }
+  },
+
+  create() {
+    let uid = Tools.uuid.v4()
+    this.data.data[uid] = this.template.item
+    this.save()
+    return uid
+  },
+
+  bootstrap() {
+    this.data = localStorage.getItem(this.name)
+    if (!this.data) {
+      // create new record
+      this.data = this.template.full
+      this.save()
+    }
+  },
+
+  save() {
+    localStorage.setItem(this.name, JSON.stringify(this.data))
+  }
+}
+
+Vue.prototype.$storage = Storage
 
 export { Storage }

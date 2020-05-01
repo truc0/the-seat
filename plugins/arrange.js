@@ -1,8 +1,9 @@
 import _ from 'lodash'
 import Vue from 'vue'
 
-import Tools from '~/plugins/helpers.js'
+import Tools from '~/plugins/helpers'
 import Gender from '~/plugins/gender'
+import Table from '~/plugins/table'
 
 const { uuid } = Tools
 
@@ -99,10 +100,10 @@ Arrange.random = (sourceArray, minPerGroup, maxPerGroup) => {
   let result = []
   let currentIndex = 0
   partition.forEach(numOfItems => {
-    result.push([])
+    result.push(Table.createBlock)
     currentIndex = result.length - 1 // the last one
     for (let i=0; i<numOfItems; ++i) {
-      result[currentIndex].push(
+      result[currentIndex].data.push(
         copiedArray.pop(Arrange.randomInt(0, copiedArray.length-1))
       )
     }
@@ -141,9 +142,11 @@ Arrange.sequential = (sourceArray, minPerGroup, maxPerGroup=null) => {
   let copiedArray = _.cloneDeep(sourceArray)
   let currentIndex = 0
 
+  let block = null
   for (let i=0; i<copiedArray.length; i+=itemsPerGroup) {
-    currentIndex = result.length - 1 // the last one
-    result[currentIndex].push(copiedArray.slice(i, i+itemsPerGroup+1))
+    block = createBlock()
+    block.data = copiedArray.slice(i, i+itemsPerGroup+1)
+    result.push(block)
   }
 
   return result

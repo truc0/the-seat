@@ -23,7 +23,10 @@ Gender.Unknown = 0
  * @param {string} gender a string represent gender
  * @returns {number} gender code
  */
-Gender.gender = gender => {
+Gender.getGender = gender => {
+  if (!gender) {
+    return Gender.Unknown
+  }
   if (Gender.identify.male.indexOf(gender.toLocaleLowerCase()) !== -1) {
     // man
     return Gender.Male

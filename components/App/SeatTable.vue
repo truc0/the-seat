@@ -71,19 +71,20 @@
           <v-col
             class="group"
             cols="4"
-            v-for="(s, index) in value"
-            :key="'group_'+index"
+            v-for="(group, index) in value"
+            :key="group.uid"
           >
             <draggable
               class="row mx-0 pa-3 light-blue-lighten-5 justify-space-around align-center elevation-4"
               group="item"
               v-bind="dragOptions"
-              v-model="value[index]"
+              :value="group.data"
+              @input="applyGroupChange(index, $event)"
             >
               <div
                 class="pa-0"
                 group="item"
-                v-for="item in s"
+                v-for="item in group.data"
                 :key="item.uid ? item.uid : newUid()"
               >
                 <v-btn
@@ -114,7 +115,11 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import draggable from 'vuedraggable'
+
+import Queues from '~/plugins/queue'
+const { TaskQueue } = Queues
 
 export default {
   props: {
@@ -166,7 +171,7 @@ export default {
           action: () => this.rearrange('sequential')
         }
       ],
-      testRef: null
+      queue: null
     }
   },
 
@@ -178,12 +183,18 @@ export default {
       return this.$tools.uuid.v4()
     },
 
+    initData() {
+      if (!this.data) {
+        this.data = _.cloneDeep(this.value)
+      }
+    },
+
     /**
      * @param {string} gender gender represent in string
      * @return coresponding color of gender
      */
     getColor(gender) {
-      let res = this.$gender.gender(gender)
+      let res = this.$gender.getGender(gender)
 
       if (res === this.$gender.Male) {
         return this.genderToColor.male
@@ -207,6 +218,24 @@ export default {
       this.$emit('input', value)
     },
 
+
+    /**
+     * emit value of specific group
+     * @param {number} index the index of group in arranged
+     * @return function a function that emit the value
+     */
+    applyGroupChange(index, data) {
+      this.queue.push(() => {
+        let _v = _.cloneDeep(this.value)
+        _v[index].data = data
+        this.emitter(_v)
+      })
+
+      if (!this.queue.hasWorker()) {
+        this.queue.work()
+      }
+    },
+
     /**
      * rearrange data with given method and emit rearranged array
      * @param {string} method method used to rearrange people
@@ -218,7 +247,7 @@ export default {
         this.minPerGroup,
         this.maxPerGroup
         )
-      this.emitter(arranged)
+      this.emitter(this.data)
     },
 
     /**
@@ -226,7 +255,7 @@ export default {
      * @return undefined
      */
     addNewBlock() {
-      let _v = [...this.value, []]
+      let _v = [...this.value, this.$table.createBlock()]
       this.emitter(_v)
     },
 
@@ -274,10 +303,11 @@ export default {
         disabled: false,
         ghostClass: "ghost"
       }
-    },
+    }
   },
 
   mounted() {
+    this.queue = new TaskQueue()
   }
 }
 </script>

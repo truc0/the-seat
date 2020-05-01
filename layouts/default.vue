@@ -21,10 +21,16 @@
         v-show="showDrawer"
         @click.stop="drawer = !drawer"
       />
-        <v-toolbar-title>
-          <span class="grey--text">The</span>
-          <span class="grey--text font-weight-medium">Seat</span>
-        </v-toolbar-title>
+      <v-toolbar-title>
+        <span class="grey--text">The</span>
+        <span class="grey--text font-weight-medium">Seat</span>
+      </v-toolbar-title>
+      <nuxt-link :to="{ name: 'index' }" class="ml-3">
+        <v-btn depressed color="white">
+          <v-icon left color="grey">mdi-home</v-icon>
+          <span class="grey--text">Home</span>
+        </v-btn>
+      </nuxt-link>
       <v-spacer />
     </v-app-bar>
     <v-content>

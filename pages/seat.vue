@@ -50,16 +50,6 @@ export default {
   },
 
   mounted() {
-    /*
-    this.updateInterval = setInterval(() => {
-      this.seats = [...this.arranged]
-
-      if (this.seats) {
-        clearInterval(this.updateInterval)
-      }
-    }, 1000)
-    */
-
     this.enableDrawer()
 
     this.$storage.use('localStorage')
@@ -67,11 +57,16 @@ export default {
 
     let payload = {}
 
-    if (this.$route.query.uid) {
-      payload.uid = this.$route.query.uid
+    if (!this.$route.query.uid) {
+      // create a new table and redirectg
+      this.$router.push({
+        name: 'seat',
+        query: {
+          uid: Storage.create()
+        }
+      })
     } else {
-      // create a new table
-      payload.uid = Storage.create()
+      payload.uid = this.$route.query.uid
     }
 
     let data = Storage.get(payload.uid)

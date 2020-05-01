@@ -2,13 +2,38 @@
   <v-expansion-panel>
     <v-expansion-panel-header>Students</v-expansion-panel-header>
     <v-expansion-panel-content>
-      <v-expansion-panels flat>
+      <v-expansion-panels>
         <v-expansion-panel v-for="(item, index) in items" :key="item.uid">
           <v-expansion-panel-header>
             <span class="caption">{{ index+1 }}</span>
             <span>{{ item.name }}</span>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
+            <v-form @submit.prevent="updateItem(index, $event)">
+              <v-text-field
+                label="Name"
+                name="name"
+                required
+                :value="item.name"
+                :rules="rules.name"
+              >
+              </v-text-field>
+              <v-select
+                label="Gender"
+                name="gender"
+                :rules="rules.gender"
+                :items="genderOptions"
+                :value="item.gender"
+                required
+              >
+              </v-select>
+              <v-btn small outlined type="submit" color="primary">
+                Update
+              </v-btn>
+              <v-btn small outlined color="error" @click="deleteItem(item)">
+                Delete
+              </v-btn>
+            </v-form>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <!-- END items loop -->
@@ -47,6 +72,8 @@
 </template>
 
 <script charset="utf-8">
+import _ from 'lodash'
+
 export default {
   data() {
     return {
@@ -73,6 +100,21 @@ export default {
       // reset
       this.name = ''
       this.gender = ''
+    },
+
+    updateItem(index, evt) {
+      let data = new FormData(evt.target)
+      let item = _.cloneDeep(this.items[index])
+
+      item.name = data.get('name')
+      item.gender = data.get('gender')
+
+      this.$store.commit('current/updateItem', item)
+      this.$forceUpdate() // a bug
+    },
+
+    deleteItem(index) {
+      this.$store.commit('current/deleteItem', index)
     }
   },
 

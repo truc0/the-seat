@@ -2,6 +2,7 @@
   <div>
     <seat-table
       v-model="arranged"
+      :key="reComputeKey"
     />
   </div>
 </template>
@@ -90,6 +91,7 @@ export default {
     ...current.mapState([
       'uid',
       'items',
+      'reComputeKey'
     ]),
     arranged: {
       get() {

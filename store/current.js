@@ -7,7 +7,8 @@ export const state = () => ({
   uid: null,
   items: null,
   arranged: null,
-  data: null
+  data: null,
+  reComputeKey: 1
 })
 
 export const mutations = {
@@ -67,26 +68,64 @@ export const mutations = {
    * @return undefined
    */
   deleteItem(state, item) {
-    if (!item.uid || typeof item.uid !== 'string') {
+    if (Number.isInteger(item)) {
+      // item is index
+      let index = item
+      item = state.items[index]
+      state.items.splice(index, 1)
+    } else if (item.uid && typeof item.uid === 'string') {
+      // item contains a uid
+      for (let index = 0; index < state.items.length; index++) {
+        if (state.items[index].uid === item.uid) {
+          state.items.splice(index, 1)
+          break;
+        }
+      }
+    } else {
       throw TypeError("Item should contains a uid and it must be a string")
     }
 
-    for (let index = 0; index < state.items.length; index++) {
-      if (state.items[index].uid === item.uid) {
-        state.items.pop(index)
-        break;
-      }
-    }
-
     for (const group of state.arranged) {
-      for (let index = 0; index < group.length; index++) {
-        if (group[index].uid === item.uid) {
-          group.pop(index)
+      for (let index = 0; index < group.data.length; index++) {
+        if (group.data[index].uid === item.uid) {
+          group.data.splice(index, 1)
           break;
         }
       }
     }
 
+    Storage.update(state.uid, _.defaults({
+      items: state.items,
+      arranged: state.arranged
+    }, state.data))
+
+    state.data = Storage.get(state.uid)
+  },
+
+  /**
+   * update an item and persist
+   * @param state the state object
+   * @param item item with updated value
+   * @return undefined
+   */
+  updateItem(state, item) {
+    for (let index = 0; index < state.items.length; index++) {
+      if (state.items[index].uid === item.uid) {
+        state.items[index] = item
+        break;
+      }
+    }
+
+    for (const group of state.arranged) {
+      for (let index = 0; index < group.data.length; index++) {
+        if (group.data[index].uid === item.uid) {
+          group.data[index] = item
+          break;
+        }
+      }
+    }
+
+    state.reComputeKey++
     Storage.update(state.uid, _.defaults({
       items: state.items,
       arranged: state.arranged

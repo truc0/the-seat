@@ -12,23 +12,13 @@
         v-for="table in tables"
         :key="table.uid"
       >
-        <v-card
-          router exact :to="makeRoute(table.uid)"
-          class="seat-overview row mx-0 align-center"
-        >
-          <v-avatar class="ml-3">
-            <v-icon
-              color="white"
-              :style="getIconBackground(table.item.color)"
-            >
-              mdi-account
-            </v-icon>
-          </v-avatar>
-          <div>
-            <v-card-title class="headline">{{ table.item.name }}</v-card-title>
-            <v-card-subtitle v-text="table.item.description"></v-card-subtitle>
-          </div>
-        </v-card>
+        <brand
+          :uid="table.uid"
+          :color="table.item.color"
+          :icon="table.item.icon"
+          :name="table.item.name"
+          :description="table.item.description"
+        />
       </v-col>
       <v-col
         cols="12" sm="6" md="4" lg="3"
@@ -49,10 +39,15 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex'
+import Brand from '~/components/App/Brand'
 
 const { mapState, mapMutations, mapActions } = createNamespacedHelpers('global')
 
 export default {
+  components: {
+    Brand
+  },
+
   data() {
     return {
       tables: []

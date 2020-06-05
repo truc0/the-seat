@@ -15,13 +15,25 @@
           @input="updateProp('description', $event)"
           :rules="rules.description"
         />
-        <span class="caption grey--text">Brand Color</span>
-        <v-color-picker
-          class="mt-1 mb-4"
-          v-model="meta.color"
-          mode="hexa"
-          hide-mode-switch
+        <div>
+          <span class="caption grey--text">Brand Color</span>
+          <v-color-picker
+            class="mt-1 mb-4"
+            v-model="meta.color"
+            mode="hexa"
+            hide-mode-switch
+          />
+        </div>
+        <v-text-field
+          label="Brand Icon"
+          placeholder="Starts with mdi-"
+          v-model="meta.icon"
+          :rules="rules.icon"
         />
+        <div class="grey--text mt-0 mb-4">
+          <span class="subtitle-2">Choose an icon from</span>
+          <a class="subtitle-2" href="https://materialdesignicons.com/">here</a>
+        </div>
         <v-alert
           v-show="flash.visibility"
           :type="flash.type"
@@ -35,6 +47,9 @@
         <v-btn small outlined type="submit" color="primary">
           Update
         </v-btn>
+        <v-btn small outlined color="error" @click="deleteThis">
+          Delete this
+        </v-btn>
       </v-form>
     </v-expansion-panel-content>
   </v-expansion-panel>
@@ -46,12 +61,16 @@ import { createNamespacedHelpers } from 'vuex'
 const current = createNamespacedHelpers('current')
 
 export default {
+  components: {
+  },
+
   data() {
     return {
       meta: {
-        "name": "",
-        "description": "",
-        "color": "#FFFFFF"
+        name: "",
+        description: "",
+        color: "#FFFFFF",
+        icon: ""
       },
       flash: {
         msg: "",
@@ -99,6 +118,7 @@ export default {
   computed: {
     ...current.mapState([
       "name",
+      "icon",
       "color",
       "description"
     ])
@@ -106,6 +126,7 @@ export default {
 
   mounted() {
     this.meta.name = this.name || ""
+    this.meta.icon = this.icon || ""
     this.meta.color = this.color || "#000000"
     this.meta.description = this.description || ""
   }

@@ -150,10 +150,12 @@ export const mutations = {
    */
   updateMeta(state, meta) {
     state.name = meta.name
+    state.color = meta.color || "#000000"
     state.description = meta.description || ""
 
     Storage.update(state.uid, _.defaults({
       name: state.name,
+      color: state.color,
       description: state.description
     }, state.data))
 

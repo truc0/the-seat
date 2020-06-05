@@ -17,7 +17,12 @@
           class="seat-overview row mx-0 align-center"
         >
           <v-avatar class="ml-3">
-            <v-icon class="indigo" color="white">mdi-account</v-icon>
+            <v-icon
+              color="white"
+              :style="getIconBackground(table.item.color)"
+            >
+              mdi-account
+            </v-icon>
           </v-avatar>
           <div>
             <v-card-title class="headline">{{ table.item.name }}</v-card-title>
@@ -80,6 +85,12 @@ export default {
         query: {
           uid: uid
         }
+      }
+    },
+
+    getIconBackground(color) {
+      return {
+        background: color
       }
     }
   }

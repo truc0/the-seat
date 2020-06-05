@@ -15,6 +15,13 @@
           @input="updateProp('description', $event)"
           :rules="rules.description"
         />
+        <span class="caption grey--text">Brand Color</span>
+        <v-color-picker
+          class="mt-1 mb-4"
+          v-model="meta.color"
+          mode="hexa"
+          hide-mode-switch
+        />
         <v-alert
           v-show="flash.visibility"
           :type="flash.type"
@@ -43,7 +50,8 @@ export default {
     return {
       meta: {
         "name": "",
-        "description": ""
+        "description": "",
+        "color": "#FFFFFF"
       },
       flash: {
         msg: "",
@@ -91,13 +99,15 @@ export default {
   computed: {
     ...current.mapState([
       "name",
+      "color",
       "description"
     ])
   },
 
   mounted() {
-    this.meta.name = this.name
-    this.meta.description = this.description
+    this.meta.name = this.name || ""
+    this.meta.color = this.color || "#000000"
+    this.meta.description = this.description || ""
   }
 }
 </script>

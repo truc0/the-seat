@@ -8,7 +8,8 @@
       fixed
       app
     >
-      <v-expansion-panels>
+      <v-expansion-panels multiple>
+        <seat-table-meta />
         <item-list />
       </v-expansion-panels>
     </v-navigation-drawer>
@@ -51,12 +52,14 @@
 import { createNamespacedHelpers } from 'vuex'
 
 import ItemList from '~/components/App/Navigation/ItemList'
+import SeatTableMeta from '~/components/App/Navigation/SeatTableMeta'
 
 const { mapState } = createNamespacedHelpers('global')
 
 export default {
   components: {
-    ItemList
+    ItemList,
+    SeatTableMeta
   },
 
   data () {

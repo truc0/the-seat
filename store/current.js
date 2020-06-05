@@ -8,6 +8,10 @@ export const state = () => ({
   items: null,
   arranged: null,
   data: null,
+  name: null,
+  color: null,
+  icon: null,
+  description: null,
   reComputeKey: 1
 })
 
@@ -21,8 +25,12 @@ export const mutations = {
   init(state, payload) {
     state.uid = payload.uid
     state.data = payload.data
+    state.name = payload.name
+    state.icon= payload.icon
     state.items = payload.items
+    state.color = payload.color
     state.arranged = payload.arranged
+    state.description = payload.description
   },
 
   /*
@@ -129,6 +137,24 @@ export const mutations = {
     Storage.update(state.uid, _.defaults({
       items: state.items,
       arranged: state.arranged
+    }, state.data))
+
+    state.data = Storage.get(state.uid)
+  },
+
+  /**
+   * Update meta and persist
+   * @param state the state object
+   * @param meta meta data to be updated
+   * @return undefined
+   */
+  updateMeta(state, meta) {
+    state.name = meta.name
+    state.description = meta.description || ""
+
+    Storage.update(state.uid, _.defaults({
+      name: state.name,
+      description: state.description
     }, state.data))
 
     state.data = Storage.get(state.uid)

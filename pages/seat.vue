@@ -72,8 +72,12 @@ export default {
 
     let data = Storage.get(payload.uid)
     payload.data = data
+    payload.name = data.name
+    payload.icon = data.icon
     payload.items = data.items
+    payload.color = data.color
     payload.arranged = data.arranged
+    payload.description = data.description
 
     this.init(payload)
   },

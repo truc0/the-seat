@@ -47,9 +47,43 @@
         <v-btn small outlined type="submit" color="primary">
           Update
         </v-btn>
-        <v-btn small outlined color="error" @click="deleteThis">
-          Delete this
-        </v-btn>
+        <v-dialog v-model="isDialogOpened" max-width="360">
+          <template v-slot:activator="{ on }">
+            <v-btn small outlined color="error" v-on="on">
+              Delete this
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title
+              class="headline grey lighten-2"
+              primary-title
+            >
+              Are you ABSOLUTELY sure?
+            </v-card-title>
+            <v-card-text class="py-3">
+              This action <strong>CANNOT</strong> be undone. This will delete <strong>{{ meta.name }}</strong> table.
+            </v-card-text>
+            <v-card-actions class="px-4">
+              <v-btn
+                small
+                outlined
+                color="primary"
+                @click.stop="isDialogOpened = false"
+              >
+                Cancel
+              </v-btn>
+              <v-spacer />
+              <v-btn
+                small
+                outlined
+                color="error"
+                @click="deleteCurrentTable"
+              >
+                Delete
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-form>
     </v-expansion-panel-content>
   </v-expansion-panel>
@@ -66,6 +100,7 @@ export default {
 
   data() {
     return {
+      isDialogOpened: false,
       meta: {
         name: "",
         description: "",
@@ -112,6 +147,13 @@ export default {
       setTimeout(() => {
         this.flash.visibility = false
       }, time);
+    },
+
+    deleteCurrentTable() {
+      this.$store.commit('current/deleteTable')
+      this.$router.push({
+        name: 'index'
+      })
     }
   },
 

@@ -162,5 +162,13 @@ export const mutations = {
     }, state.data))
 
     state.data = Storage.get(state.uid)
+  },
+
+  /**
+   * Delete current table and persist
+   * @return undefined
+   */
+  deleteTable(state) {
+    Storage.remove(state.uid)
   }
 }

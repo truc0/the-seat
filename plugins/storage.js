@@ -40,9 +40,10 @@ let local = {
     return uid
   },
 
-  remove(uid, value) {
+  remove(uid) {
     if (this.data.data[uid]) {
       delete this.data.data[uid]
+      this.save()
       return true
     } else {
       return false
